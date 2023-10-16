@@ -161,3 +161,6 @@ cython_debug/
 
 #Additional info like PDF files
 *.pdf
+
+#JSON files from utils for tests
+utils/../*.json
