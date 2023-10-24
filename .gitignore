@@ -163,4 +163,4 @@ cython_debug/
 *.pdf
 
 #JSON files from utils for tests
-utils/../*.json
+all_coins.json
