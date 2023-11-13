@@ -100,7 +100,7 @@ def create_graph(info: [dict, str]) -> str:
     plt.ylabel('Coast, $')
     plt.savefig('graph.png')
     os.remove(image)
-    return 'python_basic_diploma/utils/coinranking_api/get_coin_info/graph.png'
+    return 'graph.png'
 
 
 def coin_info_output(coin_name: str = 'eth', time_period: str = '5y'):
