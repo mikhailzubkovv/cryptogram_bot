@@ -6,6 +6,7 @@ menu = [
         InlineKeyboardButton(text='📉 Top cheap tokens', callback_data='top_cheap')
     ],
 
+    [InlineKeyboardButton(text='🔎 Choose coin', callback_data='coin_info')],
     [InlineKeyboardButton(text='🆘 Help', callback_data='help')]
 ]
 

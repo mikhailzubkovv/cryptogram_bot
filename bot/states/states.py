@@ -10,3 +10,7 @@ class TopCheap(StatesGroup):
     period = State()
     amount = State()
 
+
+class CoinInfo(StatesGroup):
+    coin_name = State()
+    period = State()

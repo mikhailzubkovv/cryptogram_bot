@@ -1,5 +1,7 @@
 import json
 import os
+from typing import Tuple, Any
+
 import cairosvg
 import requests
 
@@ -12,10 +14,10 @@ from urllib.request import urlopen
 
 def coin_info(
         add_url: str = 'coin',
-        coin_name: str = 'btc',
+        coin_name: str = 'eth',
         referenceCurrencyUuid: str = 'yhjMzLPhuIDl',
         timePeriod: str = '5y'
-) -> dict:
+) -> tuple[dict, str]:
     """
     Get a coin info from Coinranking.com API.
 
@@ -47,8 +49,10 @@ def coin_info(
     }
 
     response = requests.get(url, headers=headers, params=querystring)
-    with open('coin_info.json', 'w') as file:
-        json.dump(response.json(), file, indent=4)
+    # with open('coin_info.json', 'w') as file:
+    #     json.dump(response.json(), file, indent=4)
+
+    return response.json(), timePeriod
 
 
 def symbol_picture(url: str) -> str:
@@ -67,10 +71,10 @@ def symbol_picture(url: str) -> str:
     return path
 
 
-def create_graph() -> None:
-    with open('coin_info.json', 'r') as file:
-        data = json.load(file)
-
+def create_graph(info: [dict, str]) -> str:
+    # with open('coin_info.json', 'r') as file:
+    #     data = json.load(file)
+    data = info[0]
     y_coord = []
     for elem in data['data']['coin']['sparkline']:
         try:
@@ -86,17 +90,32 @@ def create_graph() -> None:
     image = symbol_picture(url=symbol_url)
     img = plt.imread(image)
     ax.imshow(img, extent=[min(x_coord), max(x_coord) + 1, min(y_coord), max(y_coord)], aspect='auto')
-    fig.patch.set_facecolor(data['data']['coin']['color'])
-    ax.plot(x_coord, y_coord, '--p', linewidth=4)
+    ax.plot(
+        x_coord, y_coord,
+        color='black', ls='--', linewidth=3,
+        marker='o', markersize=5, markerfacecolor='red'
+    )
     plt.title(f"{data['data']['coin']['name']} ({data['data']['coin']['symbol']})")
-    plt.xlabel('Time period (hours/months)')
+    plt.xlabel(f"Time period, {info[1]}")
     plt.ylabel('Coast, $')
     plt.savefig('graph.png')
     os.remove(image)
+    return 'python_basic_diploma/utils/coinranking_api/get_coin_info/graph.png'
+
+
+def coin_info_output(coin_name: str = 'eth', time_period: str = '5y'):
+    data = coin_info(coin_name=coin_name, timePeriod=time_period)
+    picture = create_graph(info=data)
+
+    text = (
+        f"💰price: {round(float(data[0]['data']['coin']['price']), 4)}\n"
+        f"🔺🔻change, %: {data[0]['data']['coin']['change']}\n"
+        f"🔗price to BTC: {round(float(data[0]['data']['coin']['btcPrice']), 4)}\n"
+        f"🌎website: {data[0]['data']['coin']['websiteUrl']}"
+        )
+
+    return text, picture
 
 
 if __name__ == '__main__':
-    # coin_info()
-    create_graph()
-    # img = symbol_picture(url='https://cdn.coinranking.com/xcZdYtX6E/okx.png')
-    # img.show()
+    print(coin_info_output())

@@ -36,7 +36,7 @@ async def top_coins_period(message: Message, state: FSMContext) -> None:
     :return: None
     """
     await state.update_data(period=message.text)
-    await state.set_state( TopCheap.amount)
+    await state.set_state(TopCheap.amount)
     await message.answer(text='Choose amount of output', reply_markup=kb_amount)
 
 
