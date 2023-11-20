@@ -112,7 +112,7 @@ def create_graph(info: [dict, str]) -> str:
     plt.savefig(path)
     put_image_in_image(path_img1=path, path_img2=image)
     os.remove(image)
-    return folder + 'graph.png'
+    return path
 
 
 def coin_info_output(coin_name: str = 'eth', time_period: str = '5y'):
