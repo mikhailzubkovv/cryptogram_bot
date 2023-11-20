@@ -1,12 +1,14 @@
+import datetime
 import json
 import os
-from typing import Tuple, Any
 
 import cairosvg
 import requests
 
 from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
 from utils.coinranking_api.get_coin_info.create_coins_db import create_coins_db
+from utils.coinranking_api.path_n_clean import path_to_temp
+
 from matplotlib import pyplot as plt
 from PIL import Image
 from urllib.request import urlopen
@@ -49,31 +51,38 @@ def coin_info(
     }
 
     response = requests.get(url, headers=headers, params=querystring)
-    # with open('coin_info.json', 'w') as file:
-    #     json.dump(response.json(), file, indent=4)
-
     return response.json(), timePeriod
 
 
 def symbol_picture(url: str) -> str:
+    folder = path_to_temp()
     if '.svg' in url.split('/')[-1]:
         req = requests.get(url)
-        with open(url.split('/')[-1], 'wb') as image:
+        with open(folder + url.split('/')[-1], 'wb') as image:
             image.write(req.content)
         svg_image_name = url.split('/')[-1].split('.')[0]
-        cairosvg.svg2png(url=svg_image_name + '.svg', write_to=svg_image_name + '.png')
-        path = svg_image_name + '.png'
-        os.remove(svg_image_name + '.svg')
+        cairosvg.svg2png(url=folder + svg_image_name + '.svg', write_to=folder + svg_image_name + '.png')
+        path = folder + svg_image_name + '.png'
+        os.remove(folder + svg_image_name + '.svg')
     else:
         image = Image.open(urlopen(url))
-        image.save(url.split('/')[-1])
-        path = url.split('/')[-1]
+        image.save(folder + url.split('/')[-1])
+        path = folder + url.split('/')[-1]
+    image = Image.open(path)
+    image = image.resize((60, 60))
+    image.save(path)
     return path
 
 
+def put_image_in_image(path_img1: str, path_img2: str) -> None:
+    img1 = Image.open(path_img1)
+    img2 = Image.open(path_img2)
+    img1.paste(img2, (3, 3))
+    img1.save(path_img1)
+
+
 def create_graph(info: [dict, str]) -> str:
-    # with open('coin_info.json', 'r') as file:
-    #     data = json.load(file)
+    folder = path_to_temp()
     data = info[0]
     y_coord = []
     for elem in data['data']['coin']['sparkline']:
@@ -88,19 +97,22 @@ def create_graph(info: [dict, str]) -> str:
     fig, ax = plt.subplots()
     symbol_url = data['data']['coin']['iconUrl']
     image = symbol_picture(url=symbol_url)
-    img = plt.imread(image)
-    ax.imshow(img, extent=[min(x_coord), max(x_coord) + 1, min(y_coord), max(y_coord)], aspect='auto')
     ax.plot(
         x_coord, y_coord,
         color='black', ls='--', linewidth=3,
-        marker='o', markersize=5, markerfacecolor='red'
+        marker='o', markersize=4, markerfacecolor='red'
     )
     plt.title(f"{data['data']['coin']['name']} ({data['data']['coin']['symbol']})")
     plt.xlabel(f"Time period, {info[1]}")
     plt.ylabel('Coast, $')
-    plt.savefig('graph.png')
+    plt.minorticks_on()
+    plt.grid(which='major')
+    plt.grid(which='minor', linestyle=':')
+    path = folder + str(datetime.datetime.now()) + '_' + 'graph.png'
+    plt.savefig(path)
+    put_image_in_image(path_img1=path, path_img2=image)
     os.remove(image)
-    return 'graph.png'
+    return folder + 'graph.png'
 
 
 def coin_info_output(coin_name: str = 'eth', time_period: str = '5y'):

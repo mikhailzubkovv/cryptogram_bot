@@ -166,4 +166,7 @@ cython_debug/
 all_coins.json
 coin_info.json
 coins_name_db.json
+
+#Temp files (images and etc.)
 *.png
+*.svg
