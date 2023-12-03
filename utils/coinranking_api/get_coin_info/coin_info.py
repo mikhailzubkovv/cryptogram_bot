@@ -1,13 +1,12 @@
 import datetime
-import json
 import os
 
 import cairosvg
 import requests
 
 from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
-from utils.coinranking_api.get_coin_info.create_coins_db import create_coins_db
 from utils.coinranking_api.path_n_clean import path_to_temp
+from database.coins_name_db import select_data
 
 from matplotlib import pyplot as plt
 from PIL import Image
@@ -36,10 +35,8 @@ def coin_info(
     :return: full response content from Coinranking.com for a coin
     """
 
-    create_coins_db()
-    with open('coins_name_db.json', 'r') as file:
-        data = json.load(file)
-    url = RAPID_API_URL + add_url + '/' + data[coin_name.lower()]
+    api_uuid = select_data(coin_name=coin_name.lower().replace(' ', ''))
+    url = RAPID_API_URL + add_url + '/' + api_uuid
 
     querystring = {
         "referenceCurrencyUuid": referenceCurrencyUuid,

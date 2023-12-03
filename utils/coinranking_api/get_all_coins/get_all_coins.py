@@ -82,7 +82,6 @@ def get_coins(
                 f"      🔗price to BTC: {round(float(value['btcPrice']), 4)}\n"
                 f"\n")
         message_text += text
-        print(text)
         if position + 1 >= user_top:
             break
     return message_text

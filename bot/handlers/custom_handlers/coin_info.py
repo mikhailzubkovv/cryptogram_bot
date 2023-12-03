@@ -51,7 +51,6 @@ async def coin_info(message: Message, state: FSMContext) -> None:
     await state.update_data(period=message.text)
     data = await state.get_data()
     text, picture = coin_info_output(coin_name=data['name'].lower(), time_period=message.text)
-    print(text, picture)
     picture = FSInputFile(picture)
     await message.answer_photo(
         photo=picture,
