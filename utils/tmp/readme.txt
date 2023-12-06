@@ -1,0 +1,1 @@
+Directory uses to temporary files and cleans after quiting main app

@@ -3,7 +3,7 @@ import requests
 from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
 
 
-def get_coins(
+def get_all_coins(
         add_url: str = 'coins',
         referenceCurrencyUuid: str = 'yhjMzLPhuIDl',
         timePeriod: str = '24h',
@@ -12,12 +12,10 @@ def get_coins(
         orderDirection: str = 'asc',
         limit: str = '10',
         offset: str = '0',
-        user_top: int = 10
-) -> str:
+) -> dict:
     """
     Get a list of coins from Coinranking.com API.
 
-    :param user_top: amount of tokens to output
     :param add_url: additional text to url
     :param referenceCurrencyUuid: UUID of reference currency, in which all the prices are calculated.
     This includes the price, the change and the sparkline. Defaults to US Dollar
@@ -44,7 +42,7 @@ def get_coins(
     :param offset: Offset. Used for pagination.
         Default value: 0
 
-    :return: Message text with user limit tokens
+    :return: JSON response from Coinranking.com
     """
 
     url = RAPID_API_URL + add_url
@@ -64,32 +62,8 @@ def get_coins(
     }
 
     response = requests.get(url, headers=headers, params=querystring)
-    data = response.json()
-
-    if len(data['data']['coins']) <= user_top:
-        user_top = len(data['data']['coins'])
-
-    message_text = ''
-
-    for position, value in enumerate(data['data']['coins']):
-        if 'e' not in value['price']:
-            price = round(float(value['price']), 2)
-        else:
-            price = value['price']
-        text = (f"📍{value['name']}\n"
-                f"      💰avg price, USD: {price}\n"
-                f"      🔺🔻change price, %: {value['change']}\n"
-                f"      🔗price to BTC: {round(float(value['btcPrice']), 4)}\n"
-                f"\n")
-        message_text += text
-        if position + 1 >= user_top:
-            break
-    return message_text
-
-
-def write_to_db():
-    ...
+    return response.json()
 
 
 if __name__ == '__main__':
-    get_coins()
+    print(get_all_coins())
