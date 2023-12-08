@@ -17,7 +17,5 @@ async def command_start_handler(message: Message) -> None:
     await message.answer(text=f"Hello, {hbold(message.from_user.full_name)}! "
                               f"What do you like to do? Just choose below and follow the hints ⏬",
                          reply_markup=bot.keyboad.inline_kb.kb_main_menu.menu)
-    today = datetime.date.today()
-    day = int(today.strftime('%d'))
-    if day in (1, 5, 10, 15, 20, 25, 30):
-        create_coins_db()
+
+    create_coins_db()
