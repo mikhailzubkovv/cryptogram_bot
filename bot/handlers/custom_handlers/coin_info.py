@@ -1,7 +1,9 @@
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message, FSInputFile
-from aiogram import F, html
+from aiogram import F
 from aiogram.fsm.context import FSMContext
+from aiogram.utils.markdown import hbold
 
+import bot.keyboad.inline_kb.kb_main_menu
 from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import kb_period
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
@@ -57,5 +59,7 @@ async def coin_info(message: Message, state: FSMContext) -> None:
         caption=text,
         reply_markup=ReplyKeyboardRemove()
     )
+    await message.answer(text=f"What do you like to do next?",
+                         reply_markup=bot.keyboad.inline_kb.kb_main_menu.menu)
 
     await state.clear()

@@ -1,7 +1,6 @@
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
-import datetime
 
 import bot.keyboad.inline_kb.kb_main_menu
 from bot.handlers.router_create import router
