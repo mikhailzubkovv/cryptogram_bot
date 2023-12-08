@@ -1,3 +1,6 @@
+import datetime
+
+import bot.keyboad.inline_kb.kb_main_menu
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
 from aiogram import F, html
 from aiogram.fsm.context import FSMContext
@@ -7,6 +10,7 @@ from bot.keyboad.replay_kb.kb_period import kb_period, data_period
 from bot.keyboad.replay_kb.kb_amount import kb_amount
 from utils.coinranking_api.get_all_coins.get_all_coins import get_coins
 from bot.states.states import TopCheap
+from database.user_history_db import add_to_db
 
 
 @router.callback_query(F.data == 'top_cheap')
@@ -24,7 +28,7 @@ async def top_coins_start(callback: CallbackQuery, state: FSMContext) -> None:
 
 
 @router.message(
-     TopCheap.period,
+    TopCheap.period,
     F.text.in_(['1h', '3h', '12h', '24h', '7d', '30d', '3m', '1y', '3y', '5y'])
 )
 async def top_coins_period(message: Message, state: FSMContext) -> None:
@@ -41,7 +45,7 @@ async def top_coins_period(message: Message, state: FSMContext) -> None:
 
 
 @router.message(
-     TopCheap.amount,
+    TopCheap.amount,
     F.text.in_(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
 )
 async def top_coins_output(message: Message, state: FSMContext) -> None:
@@ -53,6 +57,15 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
     :return: None
     """
     data = await state.get_data()
+    add_to_db(
+        user_name=message.from_user.id,
+        module='top_coins_cheap',
+        coin_name='EMPTY',
+        time_period=data['period'],
+        amount_output=message.text,
+        update_date=str(datetime.datetime.now())
+    )
+
     await message.answer(
         text=f"⏳ Period: {html.bold(data_period[data['period']])} "
              f"⚡Top: {html.bold(message.text)}\n"
@@ -60,4 +73,8 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
         parse_mode='HTML',
         reply_markup=ReplyKeyboardRemove()
     )
+
+    await message.answer(text=f"What do you like to do next?",
+                         reply_markup=bot.keyboad.inline_kb.kb_main_menu.menu)
+
     await state.clear()

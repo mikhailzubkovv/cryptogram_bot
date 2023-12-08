@@ -1,13 +1,14 @@
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message, FSInputFile
 from aiogram import F
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.markdown import hbold
 
+import datetime
 import bot.keyboad.inline_kb.kb_main_menu
 from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import kb_period
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
 from bot.states.states import CoinInfo
+from database.user_history_db import add_to_db
 
 
 @router.callback_query(F.data == 'coin_info')
@@ -52,6 +53,16 @@ async def coin_info(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(period=message.text)
     data = await state.get_data()
+
+    add_to_db(
+        user_name=message.from_user.id,
+        module='coin_info',
+        coin_name=data['name'],
+        time_period=data['period'],
+        amount_output='EMPTY',
+        update_date=str(datetime.datetime.now())
+    )
+
     text, picture = coin_info_output(coin_name=data['name'].lower(), time_period=message.text)
     picture = FSInputFile(picture)
     await message.answer_photo(

@@ -7,7 +7,11 @@ menu = [
     ],
 
     [InlineKeyboardButton(text='🔎 Choose coin', callback_data='coin_info')],
-    [InlineKeyboardButton(text='🆘 Help', callback_data='help')]
+
+    [
+        InlineKeyboardButton(text='💾 History', callback_data='history'),
+        InlineKeyboardButton(text='🆘 Help', callback_data='help'),
+    ]
 ]
 
 menu = InlineKeyboardMarkup(inline_keyboard=menu)
