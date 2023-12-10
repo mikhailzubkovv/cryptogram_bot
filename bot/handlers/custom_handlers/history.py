@@ -2,7 +2,7 @@ import datetime
 
 import bot.keyboad.inline_kb.kb_main_menu
 from aiogram.types import CallbackQuery, Message
-from aiogram import F, html
+from aiogram import F
 
 from bot.handlers.router_create import router
 from database.user_history_db import select_data, add_to_db
