@@ -60,7 +60,7 @@ async def coin_info(message: Message, state: FSMContext) -> None:
         coin_name=data['name'],
         time_period=data['period'],
         amount_output='EMPTY',
-        update_date=str(datetime.datetime.now())
+        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
     )
 
     text, picture = coin_info_output(coin_name=data['name'].lower(), time_period=message.text)

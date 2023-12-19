@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from database.connect_to_db import connect_db, Base
 from utils.coinranking_api.path_n_clean import path_to_temp
@@ -55,10 +55,10 @@ def add_to_db(
 
 def select_data(user_name: int) -> list | str:
     """
-    Select all user's history from DB by user_id
+     Select all user's history from DB by user_id
 
-    :param user_name: user_id in telegram
-    :return: ???????????????????????????? TODO
+    :param user_name: user_id in Telegram
+    :return:
     """
     session = connect_db()
     try:
@@ -71,10 +71,10 @@ def select_data(user_name: int) -> list | str:
                              hist_elem.amount_output, hist_elem.update_date))
         return text
     except AttributeError:
-        return "Sorry, You don't have a saved history yet"
+        return ["Sorry, You don't have a saved history yet"]
 
 
-def print_pretty_table(data: list, cell_sep=' | ', header_separator=True) -> str:
+def create_pretty_table(data: list, cell_sep=' | ', header_separator=True) -> str:
     """
     Function to create a readable output format for DB content
 
@@ -100,7 +100,7 @@ def print_pretty_table(data: list, cell_sep=' | ', header_separator=True) -> str
 
         result = []
         for col in range(cols):
-            item = str(data[row][col]).rjust(col_width[col])
+            item = f'{data[row][col]:^{col_width[col]}}'
             result.append(item)
 
         text += cell_sep.join(result)
@@ -109,19 +109,39 @@ def print_pretty_table(data: list, cell_sep=' | ', header_separator=True) -> str
     return text
 
 
-def text_to_picture(text: str) -> None:
-    img = Image.new(mode='RGB', size=(800, 800), color='#83A2FF')
+def text_to_picture(text: str) -> str:
+    """
+    Create a photo with user's history
+
+    :param text: text to add to an output photo
+    :return: path to photo
+    """
+    img = Image.new(mode='RGB', size=(850, 250), color='#FFEFD5')
     draw_img = ImageDraw.Draw(im=img)
+    fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 14)
     draw_img.text(
-        xy=(0, 0),
+        xy=(5, 0),
         text=text,
+        font=fnt,
         fill='#1C0606'
     )
-    img.show()
+
+    path = f'{path_to_temp()}{datetime.datetime.now()}_history.png'
+    img.save(path)
+    return path
+
+
+def main_user_history(user_name: int) -> str:
+    """
+    Main function for HistoryDB
+
+    :param user_name: user_id in Telegram
+    :return: path to photo
+    """
+    data = select_data(user_name=user_name)
+    text = create_pretty_table(data=data)
+    return text_to_picture(text=text)
 
 
 if __name__ == '__main__':
-    info = select_data(user_name=958241070)
-    output = print_pretty_table(data=info, header_separator=True)
-    print(output)
-    text_to_picture(text=output)
+    pass

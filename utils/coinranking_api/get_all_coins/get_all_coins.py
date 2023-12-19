@@ -87,9 +87,5 @@ def get_coins(
     return message_text
 
 
-def write_to_db():
-    ...
-
-
 if __name__ == '__main__':
     get_coins()

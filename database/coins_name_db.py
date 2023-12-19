@@ -1,6 +1,3 @@
-import time
-from typing import Any
-
 from sqlalchemy import Column, Integer, String
 
 from database.connect_to_db import connect_db, Base
@@ -34,6 +31,12 @@ def add_to_db(name: str, api_uuid: str, update_date: str) -> None:
 
 
 def select_data(coin_name: str) -> str:
+    """
+    Select coin's UUID key from DB by coin's name
+
+    :param coin_name: coin's name from user's input
+    :return: UUID key for Coinranking API
+    """
     session = connect_db()
     try:
         coin = session.query(CoinsNames).filter(CoinsNames.name == coin_name).first()
@@ -43,6 +46,11 @@ def select_data(coin_name: str) -> str:
 
 
 def checkout_db() -> str:
+    """
+    Checkout existing DB with coin's names
+
+    :return: last update date or State 1 (DB is not exist)
+    """
     session = connect_db()
     try:
         coin = session.query(CoinsNames).filter(CoinsNames.id_position == 1).first()

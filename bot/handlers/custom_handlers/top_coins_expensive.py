@@ -64,7 +64,7 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
         coin_name='EMPTY',
         time_period=data['period'],
         amount_output=message.text,
-        update_date=str(datetime.datetime.now())
+        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
     )
 
     await message.answer(

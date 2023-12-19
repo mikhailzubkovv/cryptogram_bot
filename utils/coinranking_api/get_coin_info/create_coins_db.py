@@ -5,6 +5,10 @@ from database.coins_name_db import add_to_db, checkout_db
 
 
 def create_coins_db() -> None:
+    """
+    Create coin's name entity in the PSQL DB
+    :return: None
+    """
     data = get_all_coins(timePeriod='5y', limit='5000')
 
     last_date = format_date(checkout_db())
@@ -27,6 +31,12 @@ def create_coins_db() -> None:
 
 
 def format_date(date: str) -> int:
+    """
+    Formate date to a whole number
+
+    :param date: date in text format
+    :return: date in whole number format
+    """
     return sum(map(int, date.split('-')))
 
 

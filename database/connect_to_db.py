@@ -7,6 +7,10 @@ Base = declarative_base()
 
 
 def connect_db():
+    """
+    Create connect to DB PSQL
+    :return: Session object
+    """
     engine = create_engine(f'postgresql+psycopg://{username_db}:{password_db}@{host_db}:{port_db}/{db_name}')
     Session = sessionmaker(bind=engine)
     Base.metadata.create_all(engine)

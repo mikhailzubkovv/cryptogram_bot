@@ -7,7 +7,12 @@ from bot.handlers.router_create import router
 
 
 async def start_bot(TOKEN: str) -> None:
-    # Initialize Bot instance with a default parse mode which will be passed to all API calls
+    """
+    Initialize Bot instance with a default parse mode which will be passed to all API calls
+
+    :param TOKEN: token to get access to Telegram
+    :return: None
+    """
     bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router)
