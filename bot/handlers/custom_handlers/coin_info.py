@@ -3,9 +3,9 @@ from aiogram import F
 from aiogram.fsm.context import FSMContext
 
 import datetime
-import bot.keyboad.inline_kb.kb_main_menu
+from bot.keyboad.inline_kb.kb_main_menu import menu_keybord
 from bot.handlers.router_create import router
-from bot.keyboad.replay_kb.kb_period import kb_period
+from bot.keyboad.replay_kb.kb_period import period_keyboard
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
 from bot.states.states import CoinInfo
 from database.user_history_db import add_to_db
@@ -36,7 +36,7 @@ async def coin_info_period(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(name=message.text)
     await state.set_state(CoinInfo.period)
-    await message.answer(text='Choose time period to output', reply_markup=kb_period)
+    await message.answer(text='Choose time period to output', reply_markup=period_keyboard())
 
 
 @router.message(
@@ -71,6 +71,6 @@ async def coin_info(message: Message, state: FSMContext) -> None:
         reply_markup=ReplyKeyboardRemove()
     )
     await message.answer(text=f"What do you like to do next?",
-                         reply_markup=bot.keyboad.inline_kb.kb_main_menu.menu)
+                         reply_markup=menu_keybord())
 
     await state.clear()
