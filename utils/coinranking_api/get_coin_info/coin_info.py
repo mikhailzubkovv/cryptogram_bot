@@ -4,7 +4,7 @@ import os
 import cairosvg
 import requests
 
-from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
+from project_config.config import RAPID_API_KEY, RAPID_API_URL
 from utils.coinranking_api.path_n_clean import path_to_temp
 from database.coins_name_db import select_data
 

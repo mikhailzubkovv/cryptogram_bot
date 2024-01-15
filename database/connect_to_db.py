@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from database.config_db import username_db, password_db, host_db, port_db, db_name
+from project_config.config import username_db, password_db, host_db, port_db, db_name
 
 Base = declarative_base()
 
