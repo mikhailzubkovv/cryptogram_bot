@@ -7,6 +7,7 @@ from bot.keyboad.inline_kb.kb_main_menu import menu_keybord
 from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import period_keyboard
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
+from utils.coinranking_api.path_n_clean import clean_tmp
 from bot.states.states import CoinInfo
 from database.user_history_db import add_to_db
 
@@ -74,3 +75,4 @@ async def coin_info(message: Message, state: FSMContext) -> None:
                          reply_markup=menu_keybord())
 
     await state.clear()
+    clean_tmp()
