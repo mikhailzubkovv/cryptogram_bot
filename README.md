@@ -1,5 +1,4 @@
 A Telegram bot for check an information about coin through Coinranking API
-*for correct app working, you need to use Postgresql 
 
 U need to use the next keys to work with bot (file ".env.template"):
 _TOKENS_:
@@ -9,8 +8,12 @@ _TOKENS_:
    
 
 _Work with database_ (WARNING!!! all variables shouldn't be empty):
-    - username_db - your username in PSQL system.
-    - password_db - password for user in PSQL system
-    - host_db - host to connect to PSQL Server where is your database located (local 127.0.0.1)
-    - port_db - port for your host (local 5432)
-    - db_name - name of your database, should exist beefore connect to it
+    - POSTGRES_USER - your username in PSQL system.
+    - POSTGRES_PASSWORD - password for user in PSQL system
+    - POSTGRES_DB - name of your database, should exist beefore connect to it
+
+There is added 2 ways to run BOT:
+
+1. Usual way by RUN command "python main.py" from project directory (directory should have name 
+"python_basic_diploma". Also, you need to have installed Postgresql
+2. Docker way by run command 'docker compose up -d' from project directory. To stop BOT use 'docker compose down'

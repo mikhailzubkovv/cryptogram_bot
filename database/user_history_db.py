@@ -118,7 +118,7 @@ def text_to_picture(text: str) -> str:
     """
     img = Image.new(mode='RGB', size=(850, 250), color='#FFEFD5')
     draw_img = ImageDraw.Draw(im=img)
-    fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 14)
+    fnt = ImageFont.truetype("FreeMono.ttf", 14)
     draw_img.text(
         xy=(5, 0),
         text=text,
