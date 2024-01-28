@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 from aiogram import F
 
 from bot.handlers.router_create import router
-from bot.keyboad.inline_kb.kb_main_menu import menu_keybord
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 
 
 @router.callback_query(F.data == 'help')
@@ -28,6 +28,6 @@ async def help_handler(callback: CallbackQuery) -> None:
         f"  💾 History - output last 10 user's requests\n"
     )
     await callback.message.answer(text=f"What do you like to do next?",
-                                  reply_markup=menu_keybord())
+                                  reply_markup=menu_keyboard())
     await callback.answer()
 

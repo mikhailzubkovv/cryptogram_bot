@@ -3,7 +3,7 @@ from aiogram import F
 
 from bot.handlers.router_create import router
 from database.user_history_db import main_user_history
-from bot.keyboad.inline_kb.kb_main_menu import menu_keybord
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 from utils.coinranking_api.path_n_clean import clean_tmp
 
 
@@ -25,5 +25,5 @@ async def history(callback: CallbackQuery) -> None:
     await callback.answer()
 
     await callback.message.answer(text=f"What do you like to do next?",
-                                  reply_markup=menu_keybord())
+                                  reply_markup=menu_keyboard())
     clean_tmp()

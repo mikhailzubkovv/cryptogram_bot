@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import period_keyboard, data_period
 from bot.keyboad.replay_kb.kb_amount import amount_keyboard
-from bot.keyboad.inline_kb.kb_main_menu import menu_keybord
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 from utils.coinranking_api.get_all_coins.get_all_coins import get_coins
 from bot.states.states import TopExpensive
 from database.user_history_db import add_to_db
@@ -76,6 +76,6 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
     )
 
     await message.answer(text=f"What do you like to do next?",
-                         reply_markup=menu_keybord())
+                         reply_markup=menu_keyboard())
 
     await state.clear()

@@ -35,3 +35,19 @@ class CoinInfo(StatesGroup):
     """
     coin_name = State()
     period = State()
+
+
+class ManageTasks(StatesGroup):
+    """
+    States for Manage Tasks handler
+
+    Attributes
+        task - state for set task
+        coin_name - state gets coin name
+        period - state gets period of analyze
+        task_to_drop - state to determine task to drop
+    """
+    task = State()
+    coin_name = State()
+    period = State()
+    task_to_drop = State()
