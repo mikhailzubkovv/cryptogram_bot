@@ -1,10 +1,11 @@
 from aiogram.types import CallbackQuery, FSInputFile
-from aiogram import F
+from aiogram import F, Router
 
-from bot.handlers.router_create import router
 from database.user_history_db import main_user_history
 from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 from utils.coinranking_api.path_n_clean import clean_tmp
+
+router = Router()
 
 
 @router.callback_query(F.data == 'history')

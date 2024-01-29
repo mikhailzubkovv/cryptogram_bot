@@ -98,7 +98,7 @@ async def drop_task_handler(message: Message, state: FSMContext) -> None:
         text += (f'Task {task}:\n'
                  f"Get info about changes in {tasks[task]['coin_name'].upper()} for period {tasks[task]['time_period']}"
                  f" every {tasks[task]['repeat_time']}\n"
-                 f"-----------------------\n")
+                 f"<--->\n")
 
     await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
     await message.answer(text=f"What do you like to do next?",

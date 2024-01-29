@@ -1,15 +1,16 @@
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message, FSInputFile
-from aiogram import F
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 
 import datetime
 from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
-from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import period_keyboard
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
 from utils.coinranking_api.path_n_clean import clean_tmp
 from bot.states.states import CoinInfo
 from database.user_history_db import add_to_db
+
+router = Router()
 
 
 @router.callback_query(F.data == 'coin_info')
@@ -75,4 +76,4 @@ async def coin_info(message: Message, state: FSMContext) -> None:
                          reply_markup=menu_keyboard())
 
     await state.clear()
-    # clean_tmp()
+    clean_tmp()

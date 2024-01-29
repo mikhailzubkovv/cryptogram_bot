@@ -1,11 +1,13 @@
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
+from aiogram import Router
 
 from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
-from bot.handlers.router_create import router
 
 from utils.coinranking_api.get_coin_info.create_coins_db import create_coins_db
+
+router = Router()
 
 
 @router.message(Command('start'))

@@ -1,8 +1,9 @@
 from aiogram.types import CallbackQuery
-from aiogram import F
+from aiogram import F, Router
 
-from bot.handlers.router_create import router
 from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
+
+router = Router()
 
 
 @router.callback_query(F.data == 'help')

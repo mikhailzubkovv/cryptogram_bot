@@ -1,16 +1,17 @@
 import datetime
 
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
-from aiogram import F, html
+from aiogram import F, html, Router
 from aiogram.fsm.context import FSMContext
 
-from bot.handlers.router_create import router
 from bot.keyboad.replay_kb.kb_period import period_keyboard, data_period
 from bot.keyboad.replay_kb.kb_amount import amount_keyboard
 from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 from utils.coinranking_api.get_all_coins.get_all_coins import get_coins
 from bot.states.states import TopCheap
 from database.user_history_db import add_to_db
+
+router = Router()
 
 
 @router.callback_query(F.data == 'top_cheap')
