@@ -22,14 +22,15 @@ async def start_bot(TOKEN: str) -> None:
         router,
         start.router,
         help.router,
-        echo.router,
+        # echo.router,
         coin_info.router,
         history.router,
         top_coins_expensive.router,
-        top_coins_cheap.router
+        top_coins_cheap.router,
+        manage_tasks.router
     )
 
-    # dp.startup.register()
+    dp.startup.register(manage_tasks.on_startup)
     dp.message.middleware(ChatActionMiddleware())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())

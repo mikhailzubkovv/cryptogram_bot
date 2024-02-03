@@ -51,3 +51,4 @@ class ManageTasks(StatesGroup):
     coin_name = State()
     period = State()
     task_to_drop = State()
+    repeat_period = State()
