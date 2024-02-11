@@ -5,6 +5,7 @@ from aiogram.utils.chat_action import ChatActionMiddleware
 
 from bot.handlers.default_handlers import start, help, echo
 from bot.handlers.custom_handlers import top_coins_cheap, top_coins_expensive, coin_info, history, manage_tasks
+from utils.coinranking_api.users_task_reminder.users_task_reminder import on_startup
 
 router = Router()
 
@@ -30,7 +31,7 @@ async def start_bot(TOKEN: str) -> None:
         manage_tasks.router
     )
 
-    dp.startup.register(manage_tasks.on_startup)
+    dp.startup.register(callback=on_startup)
     dp.message.middleware(ChatActionMiddleware())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())

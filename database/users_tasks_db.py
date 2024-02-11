@@ -55,22 +55,23 @@ def drop_from_db(id_position: int, user_name: int) -> None:
     session.commit()
 
 
-def select_data(user_name: int) -> dict:
+def select_data() -> dict:
     """
-    Select all tasks for user from DB
+    Select all tasks from DB
 
-    :param user_name: username in TG system
     :return: dictionary with user's tasks
     """
     session = connect_db()
     users_tasks = {}
     try:
-        tasks = session.query(UsersTask).filter(UsersTask.user_name == user_name).all()
+        tasks = session.query(UsersTask).all()
         for task in tasks:
             users_tasks[task.id_position] = {
-                'coin_name': task.coin_name,
-                'time_period': task.time_period,
-                'repeat_time': task.repeat_time
+                task.user_name: {
+                    'coin_name': task.coin_name,
+                    'time_period': task.time_period,
+                    'repeat_time': task.repeat_time
+                }
             }
 
         return users_tasks
@@ -79,4 +80,4 @@ def select_data(user_name: int) -> dict:
 
 
 if __name__ == '__main__':
-    select_data(user_name=958241070)
+    print(select_data())

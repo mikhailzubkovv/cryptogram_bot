@@ -1,7 +1,4 @@
-import asyncio
-import datetime
-
-from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message, FSInputFile
+from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 
@@ -10,8 +7,6 @@ from bot.keyboad.replay_kb.kb_period import period_keyboard
 from bot.keyboad.replay_kb.task_choose import task_decision_keyboard
 from bot.states.states import ManageTasks
 from database.users_tasks_db import add_to_db, drop_from_db, select_data
-from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
-from utils.coinranking_api.path_n_clean import clean_tmp
 
 router = Router()
 
@@ -129,7 +124,7 @@ async def drop_task_handler(message: Message, state: FSMContext) -> None:
     :return: None
     """
     try:
-        tasks = select_data(user_name=message.from_user.id)
+        tasks = select_data()
     except Exception:
         tasks = None
 
@@ -137,11 +132,13 @@ async def drop_task_handler(message: Message, state: FSMContext) -> None:
         await message.answer(text="You've not have any tasks yet", reply_markup=menu_keyboard())
     else:
         text = ''
-        for task in tasks:
-            text += (f'Task {task}:\n'
-                     f"Get info about changes in {tasks[task]['coin_name'].upper()} for period "
-                     f"{tasks[task]['time_period']} at {tasks[task]['repeat_time']} every day\n"
-                     f"---\n")
+        for task, value in tasks.items():
+            for user, sub_value in value.items():
+                if user == message.from_user.id:
+                    text += (f'Task {task}:\n'
+                             f"Get info about changes in {sub_value['coin_name'].upper()} for period "
+                             f"{sub_value['time_period']} at {sub_value['repeat_time']} every day\n"
+                             f"---\n")
 
         await message.answer(text=text, reply_markup=ReplyKeyboardRemove())
         await message.answer(text=f"What do you like to do next?",
@@ -179,37 +176,3 @@ async def drop_task_handler(message: Message, state: FSMContext) -> None:
     await message.answer(text=f"What do you like to do next?",
                          reply_markup=menu_keyboard())
     await state.clear()
-
-
-async def send_by_task() -> None:
-    user_id = 958241070
-    while True:
-        try:
-            tasks = select_data(user_name=user_id)
-            if tasks == {}:
-                await asyncio.sleep(30)
-            else:
-                for task in tasks:
-                    repeat_time = tasks[task]['repeat_time']
-                    coin_name = tasks[task]['coin_name']
-                    time_period = tasks[task]['time_period']
-                    cur_time = datetime.datetime.now().time()
-                    time_format = cur_time.strftime('%H-%M')
-                    if time_format == repeat_time:
-                        # text, picture = coin_info_output(coin_name=coin_name.lower(), time_period=time_period)
-                        # picture = FSInputFile(picture)
-                        # await message.answer_photo(
-                        #     photo=picture,
-                        #     caption=text,
-                        #     reply_markup=ReplyKeyboardRemove()
-                        # )
-                        # clean_tmp()
-                        print('HERE IS YOUR TASK!!!!')
-                        await asyncio.sleep(61)
-                    await asyncio.sleep(5)
-        except Exception:
-            await asyncio.sleep(5)
-
-
-async def on_startup():
-    asyncio.create_task(coro=send_by_task())
