@@ -1,6 +1,6 @@
 import requests
 
-from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
+from project_config.config import RAPID_API_KEY, RAPID_API_URL
 
 
 def get_coins(
@@ -85,10 +85,6 @@ def get_coins(
         if position + 1 >= user_top:
             break
     return message_text
-
-
-def write_to_db():
-    ...
 
 
 if __name__ == '__main__':

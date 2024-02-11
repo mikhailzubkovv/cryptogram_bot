@@ -1,6 +1,6 @@
 import requests
 
-from utils.coinranking_api.config import RAPID_API_KEY, RAPID_API_URL
+from project_config.config import RAPID_API_KEY, RAPID_API_URL
 
 
 def get_all_coins(

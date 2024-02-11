@@ -1,12 +1,13 @@
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
-import datetime
+from aiogram import Router
 
-import bot.keyboad.inline_kb.kb_main_menu
-from bot.handlers.router_create import router
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 
 from utils.coinranking_api.get_coin_info.create_coins_db import create_coins_db
+
+router = Router()
 
 
 @router.message(Command('start'))
@@ -16,8 +17,6 @@ async def command_start_handler(message: Message) -> None:
     """
     await message.answer(text=f"Hello, {hbold(message.from_user.full_name)}! "
                               f"What do you like to do? Just choose below and follow the hints ⏬",
-                         reply_markup=bot.keyboad.inline_kb.kb_main_menu.menu)
-    today = datetime.date.today()
-    day = int(today.strftime('%d'))
-    if day in (1, 5, 10, 15, 20, 25, 30):
-        create_coins_db()
+                         reply_markup=menu_keyboard())
+
+    create_coins_db()

@@ -1,12 +1,17 @@
+import datetime
+
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
-from aiogram import F, html
+from aiogram import F, html, Router
 from aiogram.fsm.context import FSMContext
 
-from bot.handlers.router_create import router
-from bot.keyboad.replay_kb.kb_period import kb_period, data_period
-from bot.keyboad.replay_kb.kb_amount import kb_amount
+from bot.keyboad.replay_kb.kb_period import period_keyboard, data_period
+from bot.keyboad.replay_kb.kb_amount import amount_keyboard
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 from utils.coinranking_api.get_all_coins.get_all_coins import get_coins
 from bot.states.states import TopExpensive
+from database.user_history_db import add_to_db
+
+router = Router()
 
 
 @router.callback_query(F.data == 'top_expensive')
@@ -19,7 +24,7 @@ async def top_coins_start(callback: CallbackQuery, state: FSMContext) -> None:
     :return: None
     """
     await state.set_state(TopExpensive.period)
-    await callback.message.answer(text='Choose time period', reply_markup=kb_period)
+    await callback.message.answer(text='Choose time period', reply_markup=period_keyboard())
     await callback.answer()
 
 
@@ -37,7 +42,7 @@ async def top_coins_period(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(period=message.text)
     await state.set_state(TopExpensive.amount)
-    await message.answer(text='Choose amount of output', reply_markup=kb_amount)
+    await message.answer(text='Choose amount of output', reply_markup=amount_keyboard())
 
 
 @router.message(
@@ -53,11 +58,25 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
     :return: None
     """
     data = await state.get_data()
+
+    add_to_db(
+        user_name=message.from_user.id,
+        module='top_coins_expensive',
+        coin_name='EMPTY',
+        time_period=data['period'],
+        amount_output=message.text,
+        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
+    )
+
     await message.answer(
-        text=f"⏳ Period: {html.bold(data_period[data['period']])} "
+        text=f"⏳ Period: {html.bold(data_period()[data['period']])} "
              f"⚡Top: {html.bold(message.text)}\n"
              f"{get_coins(timePeriod=data['period'], orderDirection='desc', limit='10', user_top=int(message.text))}",
         parse_mode='HTML',
         reply_markup=ReplyKeyboardRemove()
     )
+
+    await message.answer(text=f"What do you like to do next?",
+                         reply_markup=menu_keyboard())
+
     await state.clear()

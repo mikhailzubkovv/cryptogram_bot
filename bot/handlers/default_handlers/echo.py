@@ -1,6 +1,7 @@
 from aiogram.types import Message
+from aiogram import Router
 
-from bot.handlers.router_create import router
+router = Router()
 
 
 @router.message()

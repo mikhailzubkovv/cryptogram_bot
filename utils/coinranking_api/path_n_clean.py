@@ -28,6 +28,20 @@ def clean_tmp(path: str = path_to_temp()) -> None:
                 os.remove(path + file)
 
 
+def create_tmp_folder() -> None:
+    """
+    Create TEMP folder if it doesn't exist or delete after using it.
+    TEMP folder needs for temporary saving images those are created to be sent to users
+
+    :return: None
+    """
+    path = path_to_temp()
+    if os.path.isdir(s=path):
+        os.rmdir(path)
+    else:
+        os.mkdir(path=path)
+
+
 if __name__ == '__main__':
     print(path_to_temp())
     clean_tmp()
