@@ -17,3 +17,6 @@ There is added 2 ways to run BOT:
 1. Usual way by RUN command "python main.py" from project directory (directory should have name 
 "python_basic_diploma". Also, you need to have installed Postgresql
 2. Docker way by run command 'docker compose up -d' from project directory. To stop BOT use 'docker compose down'
+
+WARNING!!!
+in Dockerfile is set timezone UTC +5:00. Change it if you need.

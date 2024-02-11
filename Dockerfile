@@ -1,10 +1,11 @@
 FROM python:3.11 as base
 LABEL maintainer="freedom1294"
 
-RUN apt update -qy && apt install -qy libcairo2
+RUN apt update -qy && apt install -qy libcairo2 tzdata
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV TZ Asia/Yekaterinburg
 
 COPY requirements.txt /python_basic_diploma/
 WORKDIR /python_basic_diploma

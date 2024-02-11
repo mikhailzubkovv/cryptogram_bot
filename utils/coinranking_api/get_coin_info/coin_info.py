@@ -147,13 +147,13 @@ def coin_info_output(coin_name: str = 'eth', time_period: str = '5y') -> tuple[s
             f"🔺🔻change, %: {data[0]['data']['coin']['change']}\n"
             f"🔗price to BTC: {round(float(data[0]['data']['coin']['btcPrice']), 4)}\n"
             f"🌎website: {data[0]['data']['coin']['websiteUrl']}"
-            )
+        )
 
         return text, picture
     except TypeError:
         img = Image.new(mode='RGB', size=(300, 300), color='#FFEFD5')
         draw_img = ImageDraw.Draw(im=img)
-        fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 40)
+        fnt = ImageFont.truetype("FreeMono.ttf", 40)
         draw_img.text(
             xy=(90, 120),
             text='ERROR',
@@ -163,7 +163,8 @@ def coin_info_output(coin_name: str = 'eth', time_period: str = '5y') -> tuple[s
 
         path = f'{path_to_temp()}{datetime.datetime.now()}_history.png'
         img.save(path)
-        return "This token doesn't exist, please check it", path
+        return (f"This token doesn't exist, please check it\n"
+                f"Maybe command \\start will resolve this"), path
 
 
 if __name__ == '__main__':

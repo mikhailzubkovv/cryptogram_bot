@@ -9,7 +9,6 @@ from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
 from utils.coinranking_api.path_n_clean import clean_tmp
 from project_config.config import BOT_TOKEN
 
-
 bot = Bot(BOT_TOKEN)
 
 
@@ -24,36 +23,34 @@ async def send_by_task() -> None:
         datetime.date.today().strftime('%d-%m-%y'): {}
     }
     while True:
+        print(marker)
         today = datetime.date.today().strftime('%d-%m-%y')
         if today not in marker:
             marker[today] = {}
-        try:
-            tasks = select_data()
-            if tasks == {}:
-                await asyncio.sleep(5)
-            else:
-                for task, value in tasks.items():
-                    for user, sub_value in value.items():
-                        repeat_time = sub_value['repeat_time']
-                        coin_name = sub_value['coin_name']
-                        time_period = sub_value['time_period']
-                        cur_time = datetime.datetime.now().time()
-                        time_format = cur_time.strftime('%H-%M')
-                        if time_format == repeat_time and task not in marker[today]:
-                            text, picture = coin_info_output(coin_name=coin_name.lower(), time_period=time_period)
-                            picture = FSInputFile(picture)
-                            await bot.send_photo(
-                                chat_id=user,
-                                photo=picture,
-                                caption=f'You got this message because set task to bot\n'
-                                        f'{text}',
-                                reply_markup=ReplyKeyboardRemove()
-                            )
-                            clean_tmp()
-                            marker[today][task] = True
-                            await asyncio.sleep(1)
-                    await asyncio.sleep(1)
-        except Exception:
+        tasks = select_data()
+        if tasks == {}:
+            await asyncio.sleep(5)
+        else:
+            cur_time = datetime.datetime.now().time()
+            time_format = cur_time.strftime('%H-%M')
+            for task, value in tasks.items():
+                for user, sub_value in value.items():
+                    repeat_time = sub_value['repeat_time']
+                    coin_name = sub_value['coin_name']
+                    time_period = sub_value['time_period']
+                    if (time_format == repeat_time) and (task not in marker[today]):
+                        text, picture = coin_info_output(coin_name=coin_name.lower(), time_period=time_period)
+                        picture = FSInputFile(picture)
+                        await bot.send_photo(
+                            chat_id=user,
+                            photo=picture,
+                            caption=f'You got this message because set task to bot\n'
+                                    f'{text}',
+                            reply_markup=ReplyKeyboardRemove()
+                        )
+                        clean_tmp()
+                        marker[today][task] = True
+                        await asyncio.sleep(1)
             await asyncio.sleep(1)
 
 
