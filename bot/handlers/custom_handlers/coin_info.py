@@ -1,11 +1,16 @@
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message, FSInputFile
-from aiogram import F, html
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 
-from bot.handlers.router_create import router
-from bot.keyboad.replay_kb.kb_period import kb_period
+import datetime
+from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
+from bot.keyboad.replay_kb.kb_period import period_keyboard
 from utils.coinranking_api.get_coin_info.coin_info import coin_info_output
+from utils.coinranking_api.path_n_clean import clean_tmp
 from bot.states.states import CoinInfo
+from database.user_history_db import add_to_db
+
+router = Router()
 
 
 @router.callback_query(F.data == 'coin_info')
@@ -33,7 +38,7 @@ async def coin_info_period(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(name=message.text)
     await state.set_state(CoinInfo.period)
-    await message.answer(text='Choose time period to output', reply_markup=kb_period)
+    await message.answer(text='Choose time period to output', reply_markup=period_keyboard())
 
 
 @router.message(
@@ -50,6 +55,16 @@ async def coin_info(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(period=message.text)
     data = await state.get_data()
+
+    add_to_db(
+        user_name=message.from_user.id,
+        module='coin_info',
+        coin_name=data['name'],
+        time_period=data['period'],
+        amount_output='EMPTY',
+        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
+    )
+
     text, picture = coin_info_output(coin_name=data['name'].lower(), time_period=message.text)
     picture = FSInputFile(picture)
     await message.answer_photo(
@@ -57,5 +72,8 @@ async def coin_info(message: Message, state: FSMContext) -> None:
         caption=text,
         reply_markup=ReplyKeyboardRemove()
     )
+    await message.answer(text=f"What do you like to do next?",
+                         reply_markup=menu_keyboard())
 
     await state.clear()
+    clean_tmp()
