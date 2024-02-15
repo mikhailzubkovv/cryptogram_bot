@@ -13,7 +13,7 @@ from database.user_history_db import add_to_db
 router = Router()
 
 
-@router.callback_query(F.data == 'coin_info')
+@router.callback_query(F.data == "coin_info")
 async def coin_info_start(callback: CallbackQuery, state: FSMContext) -> None:
     """
     Handler for inline button with coin info.
@@ -38,12 +38,14 @@ async def coin_info_period(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(name=message.text)
     await state.set_state(CoinInfo.period)
-    await message.answer(text='Choose time period to output', reply_markup=period_keyboard())
+    await message.answer(
+        text="Choose time period to output", reply_markup=period_keyboard()
+    )
 
 
 @router.message(
     CoinInfo.period,
-    F.text.in_(['1h', '3h', '12h', '24h', '7d', '30d', '3m', '1y', '3y', '5y'])
+    F.text.in_(["1h", "3h", "12h", "24h", "7d", "30d", "3m", "1y", "3y", "5y"]),
 )
 async def coin_info(message: Message, state: FSMContext) -> None:
     """
@@ -58,22 +60,23 @@ async def coin_info(message: Message, state: FSMContext) -> None:
 
     add_to_db(
         user_name=message.from_user.id,
-        module='coin_info',
-        coin_name=data['name'],
-        time_period=data['period'],
-        amount_output='EMPTY',
-        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
+        module="coin_info",
+        coin_name=data["name"],
+        time_period=data["period"],
+        amount_output="EMPTY",
+        update_date=str(datetime.datetime.now().strftime("%Y-%b-%d %H:%M:%S")),
     )
 
-    text, picture = coin_info_output(coin_name=data['name'].lower(), time_period=message.text)
+    text, picture = coin_info_output(
+        coin_name=data["name"].lower(), time_period=message.text
+    )
     picture = FSInputFile(picture)
     await message.answer_photo(
-        photo=picture,
-        caption=text,
-        reply_markup=ReplyKeyboardRemove()
+        photo=picture, caption=text, reply_markup=ReplyKeyboardRemove()
     )
-    await message.answer(text=f"What do you like to do next?",
-                         reply_markup=menu_keyboard())
+    await message.answer(
+        text=f"What do you like to do next?", reply_markup=menu_keyboard()
+    )
 
     await state.clear()
     clean_tmp()

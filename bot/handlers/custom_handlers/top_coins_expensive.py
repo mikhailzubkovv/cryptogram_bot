@@ -14,7 +14,7 @@ from database.user_history_db import add_to_db
 router = Router()
 
 
-@router.callback_query(F.data == 'top_expensive')
+@router.callback_query(F.data == "top_expensive")
 async def top_coins_start(callback: CallbackQuery, state: FSMContext) -> None:
     """
     Handler for inline button with top tokens.
@@ -24,13 +24,15 @@ async def top_coins_start(callback: CallbackQuery, state: FSMContext) -> None:
     :return: None
     """
     await state.set_state(TopExpensive.period)
-    await callback.message.answer(text='Choose time period', reply_markup=period_keyboard())
+    await callback.message.answer(
+        text="Choose time period", reply_markup=period_keyboard()
+    )
     await callback.answer()
 
 
 @router.message(
     TopExpensive.period,
-    F.text.in_(['1h', '3h', '12h', '24h', '7d', '30d', '3m', '1y', '3y', '5y'])
+    F.text.in_(["1h", "3h", "12h", "24h", "7d", "30d", "3m", "1y", "3y", "5y"]),
 )
 async def top_coins_period(message: Message, state: FSMContext) -> None:
     """
@@ -42,12 +44,11 @@ async def top_coins_period(message: Message, state: FSMContext) -> None:
     """
     await state.update_data(period=message.text)
     await state.set_state(TopExpensive.amount)
-    await message.answer(text='Choose amount of output', reply_markup=amount_keyboard())
+    await message.answer(text="Choose amount of output", reply_markup=amount_keyboard())
 
 
 @router.message(
-    TopExpensive.amount,
-    F.text.in_(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
+    TopExpensive.amount, F.text.in_(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"])
 )
 async def top_coins_output(message: Message, state: FSMContext) -> None:
     """
@@ -61,22 +62,23 @@ async def top_coins_output(message: Message, state: FSMContext) -> None:
 
     add_to_db(
         user_name=message.from_user.id,
-        module='top_coins_expensive',
-        coin_name='EMPTY',
-        time_period=data['period'],
+        module="top_coins_expensive",
+        coin_name="EMPTY",
+        time_period=data["period"],
         amount_output=message.text,
-        update_date=str(datetime.datetime.now().strftime('%Y-%b-%d %H:%M:%S'))
+        update_date=str(datetime.datetime.now().strftime("%Y-%b-%d %H:%M:%S")),
     )
 
     await message.answer(
         text=f"⏳ Period: {html.bold(data_period()[data['period']])} "
-             f"⚡Top: {html.bold(message.text)}\n"
-             f"{get_coins(timePeriod=data['period'], orderDirection='desc', limit='10', user_top=int(message.text))}",
-        parse_mode='HTML',
-        reply_markup=ReplyKeyboardRemove()
+        f"⚡Top: {html.bold(message.text)}\n"
+        f"{get_coins(timePeriod=data['period'], orderDirection='desc', limit='10', user_top=int(message.text))}",
+        parse_mode="HTML",
+        reply_markup=ReplyKeyboardRemove(),
     )
 
-    await message.answer(text=f"What do you like to do next?",
-                         reply_markup=menu_keyboard())
+    await message.answer(
+        text=f"What do you like to do next?", reply_markup=menu_keyboard()
+    )
 
     await state.clear()

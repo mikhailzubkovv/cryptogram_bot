@@ -19,12 +19,9 @@ async def send_by_task() -> None:
     :return: None
     """
 
-    marker = {
-        datetime.date.today().strftime('%d-%m-%y'): {}
-    }
+    marker = {datetime.date.today().strftime("%d-%m-%y"): {}}
     while True:
-        print(marker)
-        today = datetime.date.today().strftime('%d-%m-%y')
+        today = datetime.date.today().strftime("%d-%m-%y")
         if today not in marker:
             marker[today] = {}
         tasks = select_data()
@@ -32,21 +29,23 @@ async def send_by_task() -> None:
             await asyncio.sleep(5)
         else:
             cur_time = datetime.datetime.now().time()
-            time_format = cur_time.strftime('%H-%M')
+            time_format = cur_time.strftime("%H-%M")
             for task, value in tasks.items():
                 for user, sub_value in value.items():
-                    repeat_time = sub_value['repeat_time']
-                    coin_name = sub_value['coin_name']
-                    time_period = sub_value['time_period']
+                    repeat_time = sub_value["repeat_time"]
+                    coin_name = sub_value["coin_name"]
+                    time_period = sub_value["time_period"]
                     if (time_format == repeat_time) and (task not in marker[today]):
-                        text, picture = coin_info_output(coin_name=coin_name.lower(), time_period=time_period)
+                        text, picture = coin_info_output(
+                            coin_name=coin_name.lower(), time_period=time_period
+                        )
                         picture = FSInputFile(picture)
                         await bot.send_photo(
                             chat_id=user,
                             photo=picture,
-                            caption=f'You got this message because set task to bot\n'
-                                    f'{text}',
-                            reply_markup=ReplyKeyboardRemove()
+                            caption=f"You got this message because set task to bot\n"
+                            f"{text}",
+                            reply_markup=ReplyKeyboardRemove(),
                         )
                         clean_tmp()
                         marker[today][task] = True

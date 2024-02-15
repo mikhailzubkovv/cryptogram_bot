@@ -4,14 +4,14 @@ from project_config.config import RAPID_API_KEY, RAPID_API_URL
 
 
 def get_all_coins(
-        add_url: str = 'coins',
-        referenceCurrencyUuid: str = 'yhjMzLPhuIDl',
-        timePeriod: str = '24h',
-        tiers: str = '1',
-        orderBy: str = 'price',
-        orderDirection: str = 'asc',
-        limit: str = '10',
-        offset: str = '0',
+    add_url: str = "coins",
+    referenceCurrencyUuid: str = "yhjMzLPhuIDl",
+    timePeriod: str = "24h",
+    tiers: str = "1",
+    orderBy: str = "price",
+    orderDirection: str = "asc",
+    limit: str = "10",
+    offset: str = "0",
 ) -> dict:
     """
     Get a list of coins from Coinranking.com API.
@@ -54,16 +54,14 @@ def get_all_coins(
         "orderBy": orderBy,
         "orderDirection": orderDirection,
         "limit": limit,
-        "offset": offset
+        "offset": offset,
     }
 
-    headers = {
-        "X-RapidAPI-Key": RAPID_API_KEY
-    }
+    headers = {"X-RapidAPI-Key": RAPID_API_KEY}
 
     response = requests.get(url, headers=headers, params=querystring)
     return response.json()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(get_all_coins())

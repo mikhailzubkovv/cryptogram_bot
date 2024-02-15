@@ -9,6 +9,7 @@ class TopExpensive(StatesGroup):
         period: str - state gets period of analyze
         amount: str - sate gets amount of output
     """
+
     period = State()
     amount = State()
 
@@ -21,6 +22,7 @@ class TopCheap(StatesGroup):
         period: str - state gets period of analyze
         amount: str - sate gets amount of output
     """
+
     period = State()
     amount = State()
 
@@ -33,6 +35,7 @@ class CoinInfo(StatesGroup):
         coin_name - state gets coin name
         period - state gets period of analyze
     """
+
     coin_name = State()
     period = State()
 
@@ -47,6 +50,7 @@ class ManageTasks(StatesGroup):
         period - state gets period of analyze
         task_to_drop - state to determine task to drop
     """
+
     task = State()
     coin_name = State()
     period = State()
