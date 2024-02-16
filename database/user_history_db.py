@@ -128,7 +128,6 @@ def create_pretty_table(data: list, cell_sep=" | ", header_separator=True) -> st
 
         text += cell_sep.join(result)
         text += "\n"
-
     return text
 
 

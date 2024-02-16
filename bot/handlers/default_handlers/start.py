@@ -20,5 +20,4 @@ async def command_start_handler(message: Message) -> None:
         f"What do you like to do? Just choose below and follow the hints ⏬",
         reply_markup=menu_keyboard(),
     )
-
     create_coins_db()
