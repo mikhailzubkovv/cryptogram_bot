@@ -49,8 +49,8 @@ async def send_by_task() -> None:
                         )
                         clean_tmp()
                         marker[today][task] = True
-                        await asyncio.sleep(1)
-            await asyncio.sleep(1)
+                        await asyncio.sleep(5)
+            await asyncio.sleep(5)
 
 
 async def on_startup() -> None:
