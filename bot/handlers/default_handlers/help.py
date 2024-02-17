@@ -6,7 +6,7 @@ from bot.keyboad.inline_kb.kb_main_menu import menu_keyboard
 router = Router()
 
 
-@router.callback_query(F.data == 'help')
+@router.callback_query(F.data == "help")
 async def help_handler(callback: CallbackQuery) -> None:
     """
     Send information about bot to user
@@ -28,7 +28,7 @@ async def help_handler(callback: CallbackQuery) -> None:
         f"\n"
         f"  💾 History - output last 10 user's requests\n"
     )
-    await callback.message.answer(text=f"What do you like to do next?",
-                                  reply_markup=menu_keyboard())
+    await callback.message.answer(
+        text=f"What do you like to do next?", reply_markup=menu_keyboard()
+    )
     await callback.answer()
-

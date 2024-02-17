@@ -7,7 +7,8 @@ class CoinsNames(Base):
     """
     Create table in DB with Column below.
     """
-    __tablename__ = 'coins_names'
+
+    __tablename__ = "coins_names"
 
     id_position = Column(Integer, primary_key=True)
     name = Column(String(250))
@@ -56,8 +57,8 @@ def checkout_db() -> str:
         coin = session.query(CoinsNames).filter(CoinsNames.id_position == 1).first()
         return coin.update_date
     except AttributeError:
-        return '1'
+        return "1"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

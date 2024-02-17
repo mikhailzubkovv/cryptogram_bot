@@ -7,7 +7,8 @@ class UsersTask(Base):
     """
     Create table in DB with Column below.
     """
-    __tablename__ = 'users_tasks'
+
+    __tablename__ = "users_tasks"
 
     id_position = Column(Integer, primary_key=True)
     user_name = Column(Integer)
@@ -23,16 +24,18 @@ class UsersTask(Base):
 
 
 def add_to_db(
-        user_name: int,
-        coin_name: str,
-        time_period: str,
-        repeat_time: str
+    user_name: int, coin_name: str, time_period: str, repeat_time: str
 ) -> None:
     """
     Upload dict to DB.
     """
     session = connect_db()
-    task = UsersTask(user_name=user_name, coin_name=coin_name, time_period=time_period, repeat_time=repeat_time)
+    task = UsersTask(
+        user_name=user_name,
+        coin_name=coin_name,
+        time_period=time_period,
+        repeat_time=repeat_time,
+    )
     session.add(task)
     session.commit()
 
@@ -68,9 +71,9 @@ def select_data() -> dict:
         for task in tasks:
             users_tasks[task.id_position] = {
                 task.user_name: {
-                    'coin_name': task.coin_name,
-                    'time_period': task.time_period,
-                    'repeat_time': task.repeat_time
+                    "coin_name": task.coin_name,
+                    "time_period": task.time_period,
+                    "repeat_time": task.repeat_time,
                 }
             }
 
@@ -79,5 +82,5 @@ def select_data() -> dict:
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(select_data())

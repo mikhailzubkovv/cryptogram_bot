@@ -4,7 +4,13 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.utils.chat_action import ChatActionMiddleware
 
 from bot.handlers.default_handlers import start, help, echo
-from bot.handlers.custom_handlers import top_coins_cheap, top_coins_expensive, coin_info, history, manage_tasks
+from bot.handlers.custom_handlers import (
+    top_coins_cheap,
+    top_coins_expensive,
+    coin_info,
+    history,
+    manage_tasks,
+)
 from utils.coinranking_api.users_task_reminder.users_task_reminder import on_startup
 
 router = Router()
@@ -28,7 +34,7 @@ async def start_bot(TOKEN: str) -> None:
         history.router,
         top_coins_expensive.router,
         top_coins_cheap.router,
-        manage_tasks.router
+        manage_tasks.router,
     )
 
     dp.startup.register(callback=on_startup)
@@ -37,5 +43,5 @@ async def start_bot(TOKEN: str) -> None:
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

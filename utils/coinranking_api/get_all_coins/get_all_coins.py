@@ -4,15 +4,15 @@ from project_config.config import RAPID_API_KEY, RAPID_API_URL
 
 
 def get_coins(
-        add_url: str = 'coins',
-        referenceCurrencyUuid: str = 'yhjMzLPhuIDl',
-        timePeriod: str = '24h',
-        tiers: str = '1',
-        orderBy: str = 'price',
-        orderDirection: str = 'asc',
-        limit: str = '10',
-        offset: str = '0',
-        user_top: int = 10
+    add_url: str = "coins",
+    referenceCurrencyUuid: str = "yhjMzLPhuIDl",
+    timePeriod: str = "24h",
+    tiers: str = "1",
+    orderBy: str = "price",
+    orderDirection: str = "asc",
+    limit: str = "10",
+    offset: str = "0",
+    user_top: int = 10,
 ) -> str:
     """
     Get a list of coins from Coinranking.com API.
@@ -56,36 +56,36 @@ def get_coins(
         "orderBy": orderBy,
         "orderDirection": orderDirection,
         "limit": limit,
-        "offset": offset
+        "offset": offset,
     }
 
-    headers = {
-        "X-RapidAPI-Key": RAPID_API_KEY
-    }
+    headers = {"X-RapidAPI-Key": RAPID_API_KEY}
 
     response = requests.get(url, headers=headers, params=querystring)
     data = response.json()
 
-    if len(data['data']['coins']) <= user_top:
-        user_top = len(data['data']['coins'])
+    if len(data["data"]["coins"]) <= user_top:
+        user_top = len(data["data"]["coins"])
 
-    message_text = ''
+    message_text = ""
 
-    for position, value in enumerate(data['data']['coins']):
-        if 'e' not in value['price']:
-            price = round(float(value['price']), 2)
+    for position, value in enumerate(data["data"]["coins"]):
+        if "e" not in value["price"]:
+            price = round(float(value["price"]), 2)
         else:
-            price = value['price']
-        text = (f"📍{value['name']}\n"
-                f"      💰avg price, USD: {price}\n"
-                f"      🔺🔻change price, %: {value['change']}\n"
-                f"      🔗price to BTC: {round(float(value['btcPrice']), 4)}\n"
-                f"\n")
+            price = value["price"]
+        text = (
+            f"📍{value['name']}\n"
+            f"      💰avg price, USD: {price}\n"
+            f"      🔺🔻change price, %: {value['change']}\n"
+            f"      🔗price to BTC: {round(float(value['btcPrice']), 4)}\n"
+            f"\n"
+        )
         message_text += text
         if position + 1 >= user_top:
             break
     return message_text
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     get_coins()
